@@ -1,3 +1,4 @@
+import { Carousel } from "react-native-ui-lib";
 import { View, Text, TouchableOpacity } from "../ui";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 
@@ -65,7 +66,7 @@ export const Home = () => {
   };
   const BookingCard = ({ item }: any) => {
     return (
-      <View className=" px-5 py-3 w-[310px] mi-h-[160px] rounded-[7px] border-neutral-300 bg-white border-[1px]">
+      <View className=" px-5 py-3 w-full mi-h-[160px] rounded-[7px] border-neutral-300 bg-white border-[1px]">
         <View className=" flex-row justify-between w-full items-center">
           <Text className=" text-success-500 font-bold text-base">
             {item.name}
@@ -112,14 +113,22 @@ export const Home = () => {
           <MenuItem key={item.id} item={item}></MenuItem>
         ))}
       </View>
-      <TouchableOpacity className=" flex-row justify-between items-center my-3">
+      <View className=" flex-row justify-between items-center my-3">
         <Text className=" mt-3 font-bold text-success-500">
-          Vous avez 3 résérvations on hold
+          Vous avez des résérvations
         </Text>
+        <TouchableOpacity>
+          <Text>Voir tout</Text>
+        </TouchableOpacity>
         {/* <Feather name="arrow-right-circle" size={24} color="#86A7FC" /> */}
-      </TouchableOpacity>
+      </View>
 
-      <BookingCard item={BOOKING_DATA[0]}></BookingCard>
+      {/* <BookingCard item={BOOKING_DATA[0]}></BookingCard> */}
+      {/* <Carousel>
+        {BOOKING_DATA.map((item) => (
+          <BookingCard key={item.id} item={item}></BookingCard>
+        ))}
+      </Carousel> */}
     </View>
   );
 };

@@ -5,7 +5,7 @@ const Stack = createNativeStackNavigator<MenuStackParamList>();
 export type MenuStackParamList = {
   Menu: undefined;
   // Post: { id: number };
-  AddMenu: { id: number }| undefined;
+  AddMenu: undefined;
 };
 
 export const MenuNavigator = () => {

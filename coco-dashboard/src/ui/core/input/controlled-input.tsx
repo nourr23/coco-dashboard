@@ -41,14 +41,14 @@ export function ControlledInput<T extends FieldValues>(
           className={` text-[14px] ${
             fieldState.invalid
               ? "text-danger-500"
-              : "text-club_african-blue font-bold"
+              : "text-success-500 font-bold"
           }  `}
         >
           {label}
         </Text>
       )}
       <Input
-        className={`h-[52px] border-[1px] rounded-[8px] text-neutral-600 placeholder-neutral-600 mt-1 pl-6  ${
+        className={`h-[42px] bg-white border-[1px] rounded-[8px] text-neutral-600 placeholder-neutral-600 mt-1 pl-6  ${
           fieldState.invalid ? "border-danger-500" : "border-neutral-100"
         } `}
         ref={field.ref}

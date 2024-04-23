@@ -23,12 +23,12 @@ export const buttonVariants: BVariant = {
     indicator: "text-white h-[30px]",
   },
   primary: {
-    container: "bg-club_african-red",
+    container: "bg-green-500",
     label: "",
     indicator: "text-white",
   },
   secondary: {
-    container: "bg-club_african-blue",
+    container: "bg-green-500",
     label: "",
     indicator: "text-white",
   },
@@ -38,7 +38,7 @@ export const buttonVariants: BVariant = {
     indicator: "text-white",
   },
   outline: {
-    container: "border border-club_african-red",
+    container: "border border-green-500",
     label: "text-[#D64131] font-bold dark:text-charcoal-100",
     indicator: "text-black",
   },

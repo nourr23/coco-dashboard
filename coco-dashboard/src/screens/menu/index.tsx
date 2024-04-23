@@ -30,7 +30,7 @@ export const Menu = () => {
           <View className=" flex-row  justify-between">
             <Text className=" text-neutral-500 font-bold"> {item.title} </Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("AddMenu", { id: item.id })}
+              onPress={() => navigation.navigate("AddMenu", { item: item })}
             >
               <Foundation name="pencil" size={24} color="#6b7280" />
             </TouchableOpacity>
@@ -55,7 +55,7 @@ export const Menu = () => {
       <View className=" absolute bottom-12 self-center w-full h-5 px-3">
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate("AddMenu" as never, { id: -1 } as never)
+            navigation.navigate("AddMenu" as never, { item: null } as never)
           }
           className=" w-full justify-center items-center rounded bg-green-500 h-[50px]"
         >

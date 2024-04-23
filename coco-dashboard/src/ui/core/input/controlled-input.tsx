@@ -9,7 +9,7 @@ import { useController } from "react-hook-form";
 
 import type { NInputProps } from "./input";
 import { Input } from "./input";
-import { View, Text } from "../core";
+import { View, Text } from "../../core";
 
 type TRule = Omit<
   RegisterOptions,

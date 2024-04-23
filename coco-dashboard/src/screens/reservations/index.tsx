@@ -1,4 +1,4 @@
-import { View, Text } from "../ui";
+import { View, Text } from "../../ui";
 
 export const Reservations = () => {
   return (

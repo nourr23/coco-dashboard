@@ -6,9 +6,9 @@ import { TextInput as NTextInput } from "react-native";
 
 import { isRTL } from "expo-localization";
 
-import colors from "../theme/colors";
-import { Text } from "../core";
-import { View } from "../core";
+import colors from "../../theme/colors";
+import { Text } from "../../core";
+import { View } from "../../core";
 
 const STextInput = styled(NTextInput);
 

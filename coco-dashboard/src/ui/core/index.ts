@@ -7,3 +7,4 @@ export * from "./view";
 export * from "./scroll-view";
 export * from "./image-background";
 export * from "./pressable";
+export * from "./input";

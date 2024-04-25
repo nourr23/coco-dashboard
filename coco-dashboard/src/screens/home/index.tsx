@@ -1,5 +1,5 @@
 import { Carousel } from "react-native-ui-lib";
-import { View, Text, TouchableOpacity } from "../ui";
+import { View, Text, TouchableOpacity } from "../../ui";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 
 export const Home = () => {
@@ -123,7 +123,7 @@ export const Home = () => {
         {/* <Feather name="arrow-right-circle" size={24} color="#86A7FC" /> */}
       </View>
 
-      {/* <BookingCard item={BOOKING_DATA[0]}></BookingCard> */}
+      <BookingCard item={BOOKING_DATA[0]}></BookingCard>
       {/* <Carousel>
         {BOOKING_DATA.map((item) => (
           <BookingCard key={item.id} item={item}></BookingCard>

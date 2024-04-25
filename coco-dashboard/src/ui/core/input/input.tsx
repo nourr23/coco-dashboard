@@ -6,9 +6,9 @@ import { TextInput as NTextInput } from "react-native";
 
 import { isRTL } from "expo-localization";
 
-import colors from "../theme/colors";
-import { Text } from "../core";
-import { View } from "../core";
+import colors from "../../theme/colors";
+import { Text } from "../../core";
+import { View } from "../../core";
 
 const STextInput = styled(NTextInput);
 
@@ -40,7 +40,7 @@ export const Input = React.forwardRef<TextInput, NInputProps>((props, ref) => {
     ? "bg-charcoal-800"
     : error
     ? "bg-danger-50"
-    : "bg-neutral-200";
+    : "bg-white";
   const textDirection = isRTL ? "text-right" : "text-left";
   return (
     <View className="mb-4">

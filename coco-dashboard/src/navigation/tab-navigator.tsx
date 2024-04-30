@@ -4,15 +4,16 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { ComponentType } from "react";
 import type { SvgProps } from "react-native-svg";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { MaterialIcons,MaterialCommunityIcons } from "@expo/vector-icons";
-import { Home, Reservations } from "../screens";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Home } from "../screens";
 import { MenuNavigator } from "./menu-navigator";
+import { ReservationNavigator } from "./reservation-navigator";
 import { useColorScheme } from "nativewind";
 import colors from "../ui/theme/colors";
 
 type TabParamList = {
   Home: undefined;
-  Reservations: undefined;
+  ReservationNavigator: undefined;
   MenuNavigator: undefined;
 };
 
@@ -32,7 +33,7 @@ const tabsIcons: TabIconsType = {
   Home: (props: SvgProps) => (
     <Ionicons name="home-outline" size={22} color={props.color} />
   ),
-  Reservations: (props: SvgProps) => (
+  ReservationNavigator: (props: SvgProps) => (
     <MaterialIcons name="table-restaurant" size={24} color={props.color} />
   ),
   MenuNavigator: (props: SvgProps) => (
@@ -55,8 +56,8 @@ const tabs: TabType[] = [
     label: "Accueil",
   },
   {
-    name: "Reservations",
-    component: Reservations,
+    name: "ReservationNavigator",
+    component: ReservationNavigator,
     label: "Reservations",
   },
   {

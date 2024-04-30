@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Reservations } from "../screens";
+import { Reservations, ReservationDetails } from "../screens";
 
 const Stack = createNativeStackNavigator<ReservationStackParamList>();
 export type ReservationStackParamList = {
   Reservations: undefined;
   // Post: { id: number };
-  //   AddMenu: undefined;
+  ReservationDetails: undefined;
 };
 
 export const ReservationNavigator = () => {
@@ -19,13 +19,13 @@ export const ReservationNavigator = () => {
             headerTitle: "Les reservations",
           }}
         />
-        {/* <Stack.Screen
-            name="AddMenu"
-            component={AddMenu}
-            options={{
-              headerTitle: "Ajouter un menu",
-            }}
-          /> */}
+        <Stack.Screen
+          name="ReservationDetails"
+          component={ReservationDetails}
+          options={{
+            headerTitle: "Détails de la réservation",
+          }}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );

@@ -1,5 +1,8 @@
 import { View, Text, TouchableOpacity } from "../../../ui";
+import { useNavigation } from "@react-navigation/native";
+
 export const ReservationCard = ({ item }: any) => {
+  const navigation = useNavigation();
   return (
     <View className=" px-5 py-3 my-2 w-full mi-h-[160px] rounded-[7px] border-neutral-300 bg-white border-[1px]">
       <View className=" flex-row justify-between w-full items-center">
@@ -29,7 +32,12 @@ export const ReservationCard = ({ item }: any) => {
         <Text className=" text-neutral-500 mt-2 ">{item.date}</Text>
       </View>
 
-      <TouchableOpacity className=" mt-3 flex-row items-center">
+      <TouchableOpacity
+        className=" mt-3 flex-row items-center"
+        onPress={() =>
+          navigation.navigate("ReservationDetails", { id: item.id })
+        }
+      >
         <Text className=" text-[#84cc16] font-bold text-sm mr-2">
           Voir les détails
         </Text>

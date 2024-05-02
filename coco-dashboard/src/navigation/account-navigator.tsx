@@ -1,5 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Account, AccountInformation, RestaurantInformation } from "../screens";
+import {
+  Account,
+  AccountInformation,
+  RestaurantInformation,
+  AccountSecurity,
+  Histroy,
+} from "../screens";
 
 const Stack = createNativeStackNavigator<AccountStackParamList>();
 export type AccountStackParamList = {
@@ -7,6 +13,8 @@ export type AccountStackParamList = {
   // Post: { id: number };
   AccountInformation: undefined;
   RestaurantInformation: undefined;
+  AccountSecurity: undefined;
+  Histroy: undefined;
 };
 
 export const AccountNavigator = () => {
@@ -32,6 +40,20 @@ export const AccountNavigator = () => {
           component={RestaurantInformation}
           options={{
             headerTitle: "Les information du resto",
+          }}
+        />
+        <Stack.Screen
+          name="AccountSecurity"
+          component={AccountSecurity}
+          options={{
+            headerTitle: "Sécurité",
+          }}
+        />
+        <Stack.Screen
+          name="Histroy"
+          component={Histroy}
+          options={{
+            headerTitle: "Historiques",
           }}
         />
       </Stack.Group>

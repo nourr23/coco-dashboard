@@ -3,7 +3,6 @@ import {
   ControlledInput,
   Text,
   View,
-  Input,
   ScrollView,
   TouchableOpacity,
 } from "../../../ui";
@@ -110,7 +109,7 @@ export const RestaurantInformation = () => {
       )}
       <Button
         testID="save"
-        label={"Midifier"}
+        label={"Modifier"}
         onPress={handleSubmit(onSubmit)}
         variant="primary"
         disabled={false}

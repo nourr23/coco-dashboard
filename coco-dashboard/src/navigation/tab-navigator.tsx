@@ -8,6 +8,7 @@ import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Home } from "../screens";
 import { MenuNavigator } from "./menu-navigator";
 import { ReservationNavigator } from "./reservation-navigator";
+import { AccountNavigator } from "./account-navigator";
 import { useColorScheme } from "nativewind";
 import colors from "../ui/theme/colors";
 
@@ -15,6 +16,7 @@ type TabParamList = {
   Home: undefined;
   ReservationNavigator: undefined;
   MenuNavigator: undefined;
+  AccountNavigator: undefined;
 };
 
 type TabType = {
@@ -38,6 +40,9 @@ const tabsIcons: TabIconsType = {
   ),
   MenuNavigator: (props: SvgProps) => (
     <MaterialCommunityIcons name="food-turkey" size={24} color={props.color} />
+  ),
+  AccountNavigator: (props: SvgProps) => (
+    <MaterialIcons name="person" size={24} color={props.color} />
   ),
   // EshopNavigator: (props: SvgProps) => (
   //   <MaterialIcons name="storefront" size={22} color={props.color} />
@@ -65,11 +70,11 @@ const tabs: TabType[] = [
     component: MenuNavigator,
     label: "Menu",
   },
-  // {
-  //   name: 'FeedNavigator',
-  //   component: FeedNavigator,
-  //   label: 'Feed',
-  // },
+  {
+    name: "AccountNavigator",
+    component: AccountNavigator,
+    label: "Compte",
+  },
 ];
 
 type BarIconType = {

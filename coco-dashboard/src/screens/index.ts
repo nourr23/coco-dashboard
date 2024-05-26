@@ -8,3 +8,4 @@ export * from "./account/account-information";
 export * from "./account/restaurant-information";
 export * from "./account/account-security";
 export * from "./account/history";
+export * from "./account/settings";

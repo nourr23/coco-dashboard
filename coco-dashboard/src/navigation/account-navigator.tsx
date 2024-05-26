@@ -5,6 +5,7 @@ import {
   RestaurantInformation,
   AccountSecurity,
   Histroy,
+  Settings,
 } from "../screens";
 
 const Stack = createNativeStackNavigator<AccountStackParamList>();
@@ -15,6 +16,7 @@ export type AccountStackParamList = {
   RestaurantInformation: undefined;
   AccountSecurity: undefined;
   Histroy: undefined;
+  Settings: undefined;
 };
 
 export const AccountNavigator = () => {
@@ -54,6 +56,13 @@ export const AccountNavigator = () => {
           component={Histroy}
           options={{
             headerTitle: "Historiques",
+          }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={Settings}
+          options={{
+            headerTitle: "Paramètre",
           }}
         />
       </Stack.Group>

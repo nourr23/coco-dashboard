@@ -2,25 +2,10 @@ import { View, Text, ScrollView, TouchableOpacity } from "../../ui";
 import { Avatar } from "react-native-ui-lib";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { AccountButton } from "../../ui/components/account-button";
 
 export const Account = () => {
   const navigation = useNavigation();
-  const AccountButton = ({ title, headingTo }: any) => {
-    return (
-      <TouchableOpacity
-        onPress={headingTo}
-        activeOpacity={0.8}
-        className=" w-full px-4 shadow-sm shadow-black flex-row justify-between items-center py-4 my-3 rounded-[7px] border-neutral-200 bg-white border-[0.5px]"
-      >
-        <Text className=" text-neutral-500"> {title} </Text>
-        <MaterialCommunityIcons
-          name="chevron-right"
-          size={28}
-          color="#737373"
-        />
-      </TouchableOpacity>
-    );
-  };
   return (
     <ScrollView className=" bg-white px-3 py-4">
       <View className=" mt-4 self-center items-center justify-center w-full">
@@ -50,7 +35,10 @@ export const Account = () => {
         headingTo={() => navigation.navigate("Histroy" as never)}
         title="Historiques"
       />
-      <AccountButton title="paramètre" />
+      <AccountButton
+        headingTo={() => navigation.navigate("Settings" as never)}
+        title="paramètre"
+      />
     </ScrollView>
   );
 };

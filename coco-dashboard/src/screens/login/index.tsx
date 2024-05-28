@@ -2,6 +2,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { View, Text, ScrollView, ControlledInput, Button } from "../../ui";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { supabase } from "../../api/supabaseClient";
 
 const schema = z.object({
   email: z
@@ -29,10 +30,12 @@ export const Login = () => {
   const { handleSubmit, control, setValue, getValues } = useForm<LoginInput>({
     resolver: zodResolver(schema),
   });
-  const onSubmit = handleSubmit(async (data: LoginInput) => {
-    // if (params.item) {
-    //   console.log("update", data);
-    // } else console.log("add", data);
+  const onSubmit = handleSubmit(async (user: LoginInput) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: user.email,
+      password: user.password,
+    });
+    console.log("data user", data);
   });
   return (
     <ScrollView className=" bg-white px-3 py-4">

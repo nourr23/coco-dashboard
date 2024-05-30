@@ -2,10 +2,28 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TabNavigator } from "./tab-navigator";
 import { NavigationContainer } from "./navigation-container";
 import { AuthNavigator } from "./auth-navigator";
+import { Session } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 const Stack = createNativeStackNavigator();
 
 export const Root = () => {
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      console.log("session from root g", session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      console.log("session from root g", session);
+    });
+    // supabase.auth.signOut()
+  }, []);
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -15,7 +33,7 @@ export const Root = () => {
       }}
     >
       <Stack.Group>
-        {true ? (
+        {!session ? (
           <Stack.Screen name="App" component={AuthNavigator} />
         ) : (
           <Stack.Screen name="App" component={TabNavigator} />

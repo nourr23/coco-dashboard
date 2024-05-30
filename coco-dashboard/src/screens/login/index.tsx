@@ -2,7 +2,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { View, Text, ScrollView, ControlledInput, Button } from "../../ui";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { supabase } from "../../api/supabaseClient";
+import { supabase } from "../../lib/supabase";
+import { Alert } from "react-native";
 
 const schema = z.object({
   email: z
@@ -35,6 +36,8 @@ export const Login = () => {
       email: user.email,
       password: user.password,
     });
+
+    if (error) Alert.alert(error.message);
     console.log("data user", data);
   });
   return (

@@ -3,9 +3,12 @@ import { Avatar } from "react-native-ui-lib";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { AccountButton } from "../../ui/components/account-button";
+import { getUser } from "../../lib/api";
 
 export const Account = () => {
   const navigation = useNavigation();
+  // const data = getUser()
+  
   return (
     <ScrollView className=" bg-white px-3 py-4">
       <View className=" mt-4 self-center items-center justify-center w-full">

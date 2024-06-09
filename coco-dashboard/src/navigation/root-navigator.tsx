@@ -14,14 +14,11 @@ export const Root = () => {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      console.log("session from root g", session);
     });
 
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      console.log("session from root g", session);
     });
-    // supabase.auth.signOut()
   }, []);
 
   return (

@@ -52,7 +52,7 @@ class LargeSecureStore {
 }
 
 const supabaseUrl = "https://fethenixrrndoxfimiyy.supabase.co"
-const supabaseAnonKey = process.env.SUPABASE_KEY as string
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZldGhlbml4cnJuZG94ZmltaXl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTMzNjU2ODQsImV4cCI6MjAyODk0MTY4NH0.-MzzXJLzPy-roTsw3MCSEom1HJ_TjurA0-1Lq-YHrjM"
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     auth: {

@@ -13,8 +13,10 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
-import { Image } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, Image } from "react-native";
+import { supabase } from "../../../lib/supabase";
+import { LoaderScreen } from "react-native-ui-lib";
 
 const schema = z.object({
   first_name: z
@@ -27,11 +29,6 @@ const schema = z.object({
       required_error: "Le prénom des tables est un champ obligatoire",
     })
     .min(1),
-  email: z
-    .string({
-      required_error: "l`adresse mail est un champ obligatoire",
-    })
-    .min(1),
   phone: z
     .string({
       required_error: "le numér de téléphone est un champ obligatoire",
@@ -41,71 +38,109 @@ const schema = z.object({
 type AccountInput = {
   first_name: string;
   last_name: string;
-  email: string;
   phone: string;
 };
 export type AccountFormProps = {
   onSubmit?: SubmitHandler<AccountInput>;
 };
 export const AccountInformation = () => {
+  // const data = getOwners()
   const [thumbnail, setThumbnail] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [owner, setOwner] = useState(0);
 
   const navigation = useNavigation();
 
-  const { handleSubmit, control, setValue, getValues } = useForm<AccountInput>({
+  const { handleSubmit, control } = useForm<AccountInput>({
     resolver: zodResolver(schema),
-    // defaultValues: params?.data
-    //   ? {
-    //       title: params.item.title,
-    //       tables_number: params.item.tables_number,
-    //       thumbnail: params.item.thumbnail,
-    //     }
-    //   :
-    // {},
+    defaultValues: async () => {
+      try {
+        setLoading(true);
+        const { data, error, status } = await supabase
+          .from("owners")
+          .select(`id, first_name, last_name,phone`)
+          .single();
+        if (error && status !== 406) {
+          throw error;
+        }
+        setOwner(data?.id);
+        return {
+          first_name: data?.first_name,
+          last_name: data?.last_name,
+          phone: data?.phone,
+        };
+      } catch (error) {
+        return {
+          first_name: "",
+          last_name: "",
+          phone: "",
+        };
+      } finally {
+        setLoading(false);
+      }
+    },
   });
   const onSubmit = handleSubmit(async (data: AccountInput) => {
-    // if (params.item) {
-    //   console.log("update", data);
-    // } else console.log("add", data);
+    try {
+      setLoading(true);
+      const { error } = await supabase
+        .from("owners")
+        .update({
+          first_name: data?.first_name,
+          last_name: data?.last_name,
+          phone: data?.phone,
+        })
+        .eq("id", owner)
+        .select();
+
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
   });
   return (
     <ScrollView className=" px-3 py-4 bg-white">
-      <ControlledInput
-        testID="first_name"
-        control={control}
-        name="first_name"
-        label="Nom *"
-        placeholder="Entrez votre nom"
-      />
-      <ControlledInput
-        testID="last_name"
-        control={control}
-        name="last_name"
-        label="Prénom *"
-        placeholder="Entrez votre prénom"
-      />
-      <ControlledInput
-        testID="email"
-        control={control}
-        name="email"
-        label="Email *"
-        placeholder="Entrez votre email"
-      />
-      <ControlledInput
-        testID="phone"
-        control={control}
-        name="phone"
-        label="Numéro de téléphone *"
-        placeholder="Entrez votre numéro"
-      />
-      <Button
-        testID="save"
-        label={"Modifier"}
-        onPress={handleSubmit(onSubmit)}
-        variant="primary"
-        disabled={false}
-        loading={false}
-      />
+      {!loading && owner ? (
+        <>
+          <ControlledInput
+            testID="first_name"
+            control={control}
+            name="first_name"
+            label="Nom *"
+            placeholder="Entrez votre nom"
+          />
+          <ControlledInput
+            testID="last_name"
+            control={control}
+            name="last_name"
+            label="Prénom *"
+            placeholder="Entrez votre prénom"
+          />
+          <ControlledInput
+            testID="phone"
+            control={control}
+            name="phone"
+            label="Numéro de téléphone *"
+            placeholder="Entrez votre numéro"
+          />
+          <Button
+            testID="save"
+            label={"Modifier"}
+            onPress={handleSubmit(onSubmit)}
+            variant="primary"
+            disabled={false}
+            loading={false}
+          />
+        </>
+      ) : (
+        <LoaderScreen />
+      )}
     </ScrollView>
   );
 };

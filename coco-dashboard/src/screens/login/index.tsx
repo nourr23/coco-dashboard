@@ -38,6 +38,7 @@ export const Login = () => {
     });
 
     if (error) Alert.alert(error.message);
+
     console.log("data user", data);
   });
   return (

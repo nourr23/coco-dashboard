@@ -33,7 +33,7 @@ export const buttonVariants: BVariant = {
     indicator: "text-white",
   },
   danger: {
-    container: "bg-red-600",
+    container: "bg-danger-600",
     label: "text-secondary-600",
     indicator: "text-white",
   },

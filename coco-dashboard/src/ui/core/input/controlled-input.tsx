@@ -41,7 +41,7 @@ export function ControlledInput<T extends FieldValues>(
           className={` text-[14px] ${
             fieldState.invalid
               ? "text-danger-500"
-              : "text-success-500 font-bold"
+              : "text-neutral-500 font-bold"
           }  `}
         >
           {label}

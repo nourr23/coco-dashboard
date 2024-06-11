@@ -18,6 +18,10 @@ import { useEffect, useState } from "react";
 import { Alert, Image } from "react-native";
 import { supabase } from "../../lib/supabase";
 import { LoaderScreen } from "react-native-ui-lib";
+import * as FileSystem from "expo-file-system";
+import { decode } from "base64-arraybuffer";
+import { FileObject } from "@supabase/storage-js";
+import { Session } from "@supabase/supabase-js";
 
 const schema = z.object({
   title: z
@@ -60,6 +64,18 @@ export const AddMenu = () => {
   const { params } = useRoute<any>();
   const navigation = useNavigation();
 
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    // supabase.auth.onAuthStateChange((_event, session) => {
+    //   setSession(session);
+    // });
+  }, []);
+
   useEffect(() => {
     getRestaurant();
   }, []);
@@ -87,14 +103,42 @@ export const AddMenu = () => {
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      try {
+        setLoading(true)
+      const img = result.assets[0];
+      const base64 = await FileSystem.readAsStringAsync(img.uri, {
+        encoding: "base64",
+      });
+      const filePath = `${session?.user.id}/${new Date().getTime()}.${
+        img.type === "image" ? "png" : "mp4"
+      }`;
+      const contentType = img.type === "image" ? "image/png" : "video/mp4";
+        const { error } = await supabase.storage
+          .from("menus")
+          .upload(
+            filePath,
+            decode(base64),
+            { contentType }
+          );
+        const { data } = supabase.storage
+          .from("project")
+          .getPublicUrl(filePath);
+
+        if (error) {
+          console.log("if error", error);
+        } else {
+          console.log("data", data);
+          setImage(data?.publicUrl);
+        }
+      } catch (error) {
+        console.log("catch error", error);
+      }
     }
   };
   const { handleSubmit, control, setValue, getValues } = useForm<MenuInput>({

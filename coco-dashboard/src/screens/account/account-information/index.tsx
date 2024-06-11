@@ -51,7 +51,7 @@ export const AccountInformation = () => {
 
   const navigation = useNavigation();
 
-  const { handleSubmit, control } = useForm<AccountInput>({
+  const { handleSubmit, control, setValue } = useForm<AccountInput>({
     resolver: zodResolver(schema),
     defaultValues: async () => {
       try {

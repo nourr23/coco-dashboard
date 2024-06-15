@@ -63,6 +63,7 @@ export const AddMenu = () => {
   const [loadingImgae, setLoadingImgae] = useState(false);
   const [restaurantId, setRestaurantId] = useState(0);
   const [image, setImage] = useState("");
+  const [imageBorder, setImageBorder] = useState(true);
   const { params } = useRoute<any>();
   const navigation = useNavigation();
 
@@ -73,7 +74,7 @@ export const AddMenu = () => {
       setSession(session);
     });
     params.item && setImage(params.item.image_url);
-    console.log(params.item)
+    console.log(params.item);
   }, []);
 
   useEffect(() => {
@@ -110,6 +111,7 @@ export const AddMenu = () => {
     });
     if (!result.canceled) {
       try {
+        setImageBorder(true);
         setLoadingImgae(true);
         const img = result.assets[0];
         const base64 = await FileSystem.readAsStringAsync(img.uri, {
@@ -178,34 +180,38 @@ export const AddMenu = () => {
         setLoading(false);
       }
     } else {
-      try {
-        setLoading(true);
-        const { data, error, status } = await supabase
-          .from("menu")
-          .upsert([
-            {
-              title: payload.title,
-              description: payload.description,
-              price: payload.price,
-              image_url: image,
-              restaurant_id: restaurantId,
-            },
-          ])
-          .select();
-        if (error && status !== 406) {
-          throw error;
-        } else {
-          Alert.alert("Menu ajouté", "", [
-            { text: "OK", onPress: () => navigation.goBack() },
-          ]);
+      if (image) {
+        try {
+          setLoading(true);
+          const { data, error, status } = await supabase
+            .from("menu")
+            .upsert([
+              {
+                title: payload.title,
+                description: payload.description,
+                price: payload.price,
+                image_url: image,
+                restaurant_id: restaurantId,
+              },
+            ])
+            .select();
+          if (error && status !== 406) {
+            throw error;
+          } else {
+            Alert.alert("Menu ajouté", "", [
+              { text: "OK", onPress: () => navigation.goBack() },
+            ]);
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            Alert.alert(error.message);
+          }
+          console.log("error", error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        if (error instanceof Error) {
-          Alert.alert(error.message);
-        }
-        console.log("error", error);
-      } finally {
-        setLoading(false);
+      } else {
+        setImageBorder(false);
       }
     }
   });
@@ -243,11 +249,11 @@ export const AddMenu = () => {
   };
 
   return (
-    <ScrollView className=" px-3 py-4  bg-white">
+    <ScrollView className=" px-3 pt-4 bg-white">
       {loading ? (
         <LoaderScreen />
       ) : (
-        <>
+        <View className=" pb-8">
           <ControlledInput
             testID="title"
             control={control}
@@ -261,6 +267,9 @@ export const AddMenu = () => {
             name="description"
             label="Description *"
             placeholder=""
+            className=" h-[800px]"
+            multiline
+            numberOfLines={4}
           />
           <ControlledInput
             testID="price"
@@ -271,8 +280,9 @@ export const AddMenu = () => {
             keyboardType="numeric"
           />
           <View
-            className={`${
-              !image ? "border" : ""
+            className={`${!image ? "border" : ""}
+            ${
+              !imageBorder ? "border-danger-500" : "border-neutral-500"
             } w-full items-center border-dashed h-[180px]`}
           >
             {loadingImgae ? (
@@ -290,8 +300,15 @@ export const AddMenu = () => {
               <>
                 <TouchableOpacity
                   onPress={pickImage}
-                  className=" h-full w-full items-center justify-center"
+                  className=" h-full w-full items-center justify-center relative"
                 >
+                  {!imageBorder && (
+                    <View className=" w-full py-4 absolute bottom-[0px] left-4">
+                      <Text className=" text-danger-500 my-2 text-xs">
+                        l`URL de l`image est un champ obligatoire
+                      </Text>
+                    </View>
+                  )}
                   <Feather name="camera" size={94} color="#737373" />
                 </TouchableOpacity>
               </>
@@ -301,7 +318,7 @@ export const AddMenu = () => {
           {image && (
             <TouchableOpacity
               onPress={pickImage}
-              className=" rounded-lg w-full my-4 py-2 text-neutral-500 items-center border border-green-500"
+              className=" rounded-lg w-full my-1 py-2 text-neutral-500 items-center border border-green-500"
             >
               <Text className=" text-green-500 font-bold">Changer l'image</Text>
             </TouchableOpacity>
@@ -324,7 +341,7 @@ export const AddMenu = () => {
               loading={false}
             />
           ) : null}
-        </>
+        </View>
       )}
     </ScrollView>
   );

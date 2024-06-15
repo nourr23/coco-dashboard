@@ -18,7 +18,7 @@ type BVariant = {
 export const buttonVariants: BVariant = {
   defaults: {
     container:
-      "flex-row items-center justify-center a rounded-[6px] px-12 py-3 my-2",
+      "flex-row items-center justify-center a rounded-[6px] px-12 py-3 my-1",
     label: "text-[16px] font-medium text-white",
     indicator: "text-white h-[30px]",
   },

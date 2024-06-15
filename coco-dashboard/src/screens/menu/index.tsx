@@ -11,7 +11,7 @@ export const Menu = () => {
   const [menuList, setMenuList] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       getMenu();
     });
     return unsubscribe;
@@ -64,7 +64,12 @@ export const Menu = () => {
               <Foundation name="pencil" size={24} color="#6b7280" />
             </TouchableOpacity>
           </View>
-          <Text className=" text-neutral-300 mt-2">{item.description}</Text>
+          <Text
+            numberOfLines={2}
+            className=" leading-5 text-[13px] pr-2  text-neutral-300 my-2"
+          >
+            {item.description}
+          </Text>
           <Text className=" text-green-500 font-bold mt -2">
             {item.price} {" DNT"}
           </Text>

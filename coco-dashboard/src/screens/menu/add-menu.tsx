@@ -22,6 +22,7 @@ import * as FileSystem from "expo-file-system";
 import { decode } from "base64-arraybuffer";
 import { FileObject } from "@supabase/storage-js";
 import { Session } from "@supabase/supabase-js";
+import Feather from "@expo/vector-icons/Feather";
 
 const schema = z.object({
   title: z
@@ -59,8 +60,10 @@ export type MenuFormProps = {
 
 export const AddMenu = () => {
   const [loading, setLoading] = useState(true);
+  const [loadingImgae, setLoadingImgae] = useState(false);
   const [restaurantId, setRestaurantId] = useState(0);
   const [image, setImage] = useState("");
+  const [imageBorder, setImageBorder] = useState(true);
   const { params } = useRoute<any>();
   const navigation = useNavigation();
 
@@ -70,10 +73,8 @@ export const AddMenu = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
-
-    // supabase.auth.onAuthStateChange((_event, session) => {
-    //   setSession(session);
-    // });
+    params.item && setImage(params.item.image_url);
+    console.log(params.item);
   }, []);
 
   useEffect(() => {
@@ -110,34 +111,33 @@ export const AddMenu = () => {
     });
     if (!result.canceled) {
       try {
-        setLoading(true)
-      const img = result.assets[0];
-      const base64 = await FileSystem.readAsStringAsync(img.uri, {
-        encoding: "base64",
-      });
-      const filePath = `${session?.user.id}/${new Date().getTime()}.${
-        img.type === "image" ? "png" : "mp4"
-      }`;
-      const contentType = img.type === "image" ? "image/png" : "video/mp4";
+        setImageBorder(true);
+        setLoadingImgae(true);
+        const img = result.assets[0];
+        const base64 = await FileSystem.readAsStringAsync(img.uri, {
+          encoding: "base64",
+        });
+        const filePath = `${session?.user.id}/${new Date().getTime()}.${
+          img.type === "image" ? "png" : "mp4"
+        }`;
+        const contentType = img.type === "image" ? "image/png" : "video/mp4";
         const { error } = await supabase.storage
           .from("menus")
-          .upload(
-            filePath,
-            decode(base64),
-            { contentType }
-          );
-        const { data } = supabase.storage
-          .from("project")
-          .getPublicUrl(filePath);
+          .upload(filePath, decode(base64), { contentType });
+        const { data } = supabase.storage.from("menus").getPublicUrl(filePath);
 
         if (error) {
           console.log("if error", error);
         } else {
-          console.log("data", data);
           setImage(data?.publicUrl);
+          setLoadingImgae(false);
         }
       } catch (error) {
         console.log("catch error", error);
+        setLoadingImgae(false);
+      } finally {
+        console.log("finaly error", image);
+        setLoadingImgae(false);
       }
     }
   };
@@ -162,6 +162,7 @@ export const AddMenu = () => {
             title: payload.title,
             description: payload.description,
             price: payload.price,
+            image_url: image,
           })
           .eq("id", params.item.id)
           .select();
@@ -179,33 +180,38 @@ export const AddMenu = () => {
         setLoading(false);
       }
     } else {
-      try {
-        setLoading(true);
-        const { data, error, status } = await supabase
-          .from("menu")
-          .insert([
-            {
-              title: payload.title,
-              description: payload.description,
-              price: payload.price,
-              restaurant_id: restaurantId,
-            },
-          ])
-          .select();
-        if (error && status !== 406) {
-          throw error;
-        } else {
-          Alert.alert("Menu ajouté", "", [
-            { text: "OK", onPress: () => navigation.goBack() },
-          ]);
+      if (image) {
+        try {
+          setLoading(true);
+          const { data, error, status } = await supabase
+            .from("menu")
+            .upsert([
+              {
+                title: payload.title,
+                description: payload.description,
+                price: payload.price,
+                image_url: image,
+                restaurant_id: restaurantId,
+              },
+            ])
+            .select();
+          if (error && status !== 406) {
+            throw error;
+          } else {
+            Alert.alert("Menu ajouté", "", [
+              { text: "OK", onPress: () => navigation.goBack() },
+            ]);
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            Alert.alert(error.message);
+          }
+          console.log("error", error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        if (error instanceof Error) {
-          Alert.alert(error.message);
-        }
-        console.log("error", error);
-      } finally {
-        setLoading(false);
+      } else {
+        setImageBorder(false);
       }
     }
   });
@@ -243,11 +249,11 @@ export const AddMenu = () => {
   };
 
   return (
-    <ScrollView className=" px-3 py-4  bg-white">
+    <ScrollView className=" px-3 pt-4 bg-white">
       {loading ? (
         <LoaderScreen />
       ) : (
-        <>
+        <View className=" pb-8">
           <ControlledInput
             testID="title"
             control={control}
@@ -261,6 +267,9 @@ export const AddMenu = () => {
             name="description"
             label="Description *"
             placeholder=""
+            className=" h-[800px]"
+            multiline
+            numberOfLines={4}
           />
           <ControlledInput
             testID="price"
@@ -270,20 +279,49 @@ export const AddMenu = () => {
             placeholder=""
             keyboardType="numeric"
           />
-          <TouchableOpacity onPress={pickImage} className=" my-4">
-            <Text className=" text-neutral-500 font-bold">
-              Choisissez une image
-            </Text>
-          </TouchableOpacity>
+          <View
+            className={`${!image ? "border" : ""}
+            ${
+              !imageBorder ? "border-danger-500" : "border-neutral-500"
+            } w-full items-center border-dashed h-[180px]`}
+          >
+            {loadingImgae ? (
+              <LoaderScreen />
+            ) : image ? (
+              <View className=" w-full items-center">
+                <Image
+                  source={{ uri: image }}
+                  width={340}
+                  resizeMode="center"
+                  height={180}
+                />
+              </View>
+            ) : (
+              <>
+                <TouchableOpacity
+                  onPress={pickImage}
+                  className=" h-full w-full items-center justify-center relative"
+                >
+                  {!imageBorder && (
+                    <View className=" w-full py-4 absolute bottom-[0px] left-4">
+                      <Text className=" text-danger-500 my-2 text-xs">
+                        l`URL de l`image est un champ obligatoire
+                      </Text>
+                    </View>
+                  )}
+                  <Feather name="camera" size={94} color="#737373" />
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+
           {image && (
-            <View className=" w-full">
-              <Image
-                source={{ uri: image }}
-                width={240}
-                resizeMode="center"
-                height={200}
-              />
-            </View>
+            <TouchableOpacity
+              onPress={pickImage}
+              className=" rounded-lg w-full my-1 py-2 text-neutral-500 items-center border border-green-500"
+            >
+              <Text className=" text-green-500 font-bold">Changer l'image</Text>
+            </TouchableOpacity>
           )}
           <Button
             testID="save"
@@ -303,7 +341,7 @@ export const AddMenu = () => {
               loading={false}
             />
           ) : null}
-        </>
+        </View>
       )}
     </ScrollView>
   );

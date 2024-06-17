@@ -11,3 +11,4 @@ export * from "./account/history";
 export * from "./account/settings";
 export * from "./login";
 export * from "./account/restaurant-information/places-form";
+export * from "./account/restaurant-information/places";

@@ -159,11 +159,11 @@ export const RestaurantInformation = () => {
           />
           {/* liste des table */}
           <TouchableOpacity
-            onPress={() => navigation.navigate("PlacesForm" as never)}
+            onPress={() => navigation.navigate("Places" as never)}
             className=" rounded-lg w-full my-1 py-2 text-neutral-500 items-center border border-green-500"
           >
             <Text className=" text-green-500 font-bold">
-              Ajouter un type de table
+              Voir les tables
             </Text>
           </TouchableOpacity>
         </>

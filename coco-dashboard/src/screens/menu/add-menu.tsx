@@ -346,28 +346,3 @@ export const AddMenu = () => {
     </ScrollView>
   );
 };
-
-// const test = {
-//   access_token:
-//     "eyJhbGciOiJIUzI1NiIsImtpZCI6InhXRHFXc2VxRlZiTGFCS08iLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzE4MDEzODkxLCJpYXQiOjE3MTgwMTAyOTEsImlzcyI6Imh0dHBzOi8vZmV0aGVuaXhycm5kb3hmaW1peXkuc3VwYWJhc2UuY28vYXV0aC92MSIsInN1YiI6IjUwYWZjZjA1LTZiMjEtNGQ4OC1hOGYxLWE3NDdhM2VjMTkyZCIsImVtYWlsIjoibm91ci5lZGFoZXIuam91aW5pQGdtYWlsLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnt9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzE3OTQ4MTk2fV0sInNlc3Npb25faWQiOiI2ODQwZTczZS1iOGJkLTQzN2EtOGY1ZC1jMTA5ZTY5ZmNkZmEiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.OG-83OSNXwxbRTV7NtGGBKtc_u4mTu7tYs37uggV6O8",
-//   expires_at: 1718013891,
-//   expires_in: 3600,
-//   refresh_token: "YzHIdbVJDCd02STrWBsJiQ",
-//   token_type: "bearer",
-//   user: {
-//     app_metadata: { provider: "email", providers: [Array] },
-//     aud: "authenticated",
-//     confirmed_at: "2024-05-25T09:25:21.550031Z",
-//     created_at: "2024-05-25T09:25:21.536365Z",
-//     email: "nour.edaher.jouini@gmail.com",
-//     email_confirmed_at: "2024-05-25T09:25:21.550031Z",
-//     id: "50afcf05-6b21-4d88-a8f1-a747a3ec192d",
-//     identities: [[Object]],
-//     is_anonymous: false,
-//     last_sign_in_at: "2024-06-09T15:49:56.247866Z",
-//     phone: "",
-//     role: "authenticated",
-//     updated_at: "2024-06-10T09:04:51.802506Z",
-//     user_metadata: {},
-//   },
-// };

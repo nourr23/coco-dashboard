@@ -7,6 +7,7 @@ import {
   Histroy,
   Settings,
   PlacesForm,
+  Places,
 } from "../screens";
 
 const Stack = createNativeStackNavigator<AccountStackParamList>();
@@ -19,6 +20,7 @@ export type AccountStackParamList = {
   Histroy: undefined;
   Settings: undefined;
   PlacesForm: undefined;
+  Places: undefined;
 };
 
 export const AccountNavigator = () => {
@@ -72,6 +74,13 @@ export const AccountNavigator = () => {
           component={PlacesForm}
           options={{
             headerTitle: "Ajouter un type",
+          }}
+        />
+        <Stack.Screen
+          name="Places"
+          component={Places}
+          options={{
+            headerTitle: "Les types des tables",
           }}
         />
       </Stack.Group>

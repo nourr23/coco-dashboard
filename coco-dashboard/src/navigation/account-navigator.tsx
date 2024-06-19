@@ -6,6 +6,8 @@ import {
   AccountSecurity,
   Histroy,
   Settings,
+  PlacesForm,
+  Places,
 } from "../screens";
 
 const Stack = createNativeStackNavigator<AccountStackParamList>();
@@ -17,6 +19,8 @@ export type AccountStackParamList = {
   AccountSecurity: undefined;
   Histroy: undefined;
   Settings: undefined;
+  PlacesForm: undefined;
+  Places: undefined;
 };
 
 export const AccountNavigator = () => {
@@ -63,6 +67,20 @@ export const AccountNavigator = () => {
           component={Settings}
           options={{
             headerTitle: "Paramètre",
+          }}
+        />
+        <Stack.Screen
+          name="PlacesForm"
+          component={PlacesForm}
+          options={{
+            headerTitle: "Ajouter un type",
+          }}
+        />
+        <Stack.Screen
+          name="Places"
+          component={Places}
+          options={{
+            headerTitle: "Les types des tables",
           }}
         />
       </Stack.Group>

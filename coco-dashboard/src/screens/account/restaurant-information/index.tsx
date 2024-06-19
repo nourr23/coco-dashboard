@@ -12,35 +12,28 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
-import { Image } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, Image } from "react-native";
+import { supabase } from "../../../lib/supabase";
+import { LoaderScreen } from "react-native-ui-lib";
 
 const schema = z.object({
-  title: z
+  name: z
     .string({
       required_error: "le titre  est un champ obligatoire",
     })
     .min(1),
-  tables_number: z
-    .string({
-      required_error: "Le nombre des tables est un champ obligatoire",
-    })
-    .min(1),
-  thumbnail: z
-    .string({
-      required_error: "l`URL de l`image est un champ obligatoire",
-    })
-    .min(1),
 });
 type RestaurantInput = {
-  title: string;
-  tables_number: string;
-  thumbnail: string;
+  name: string | undefined;
 };
 export type RestaurantFormProps = {
   onSubmit?: SubmitHandler<RestaurantInput>;
 };
 export const RestaurantInformation = () => {
+  const [loading, setLoading] = useState(true);
+  const [loadingImgae, setLoadingImgae] = useState(false);
+  const [restaurantId, setRestaurantId] = useState(0);
   const [thumbnail, setThumbnail] = useState("");
 
   const navigation = useNavigation();
@@ -58,63 +51,123 @@ export const RestaurantInformation = () => {
       setThumbnail(result.assets[0].uri);
     }
   };
+
   const { handleSubmit, control, setValue, getValues } =
     useForm<RestaurantInput>({
       resolver: zodResolver(schema),
-      // defaultValues: params?.data
-      //   ? {
-      //       title: params.item.title,
-      //       tables_number: params.item.tables_number,
-      //       thumbnail: params.item.thumbnail,
-      //     }
-      //   :
-      // {},
+      defaultValues: async () => {
+        try {
+          setLoading(true);
+          const { data: restaurants, error } = await supabase
+            .from("restaurants")
+            .select("id,name")
+            .single();
+
+          if (error) {
+            return {
+              name: "",
+            };
+            throw error;
+          } else {
+            setRestaurantId(restaurants && restaurants.id);
+            console.log(restaurants);
+          }
+          return {
+            name: restaurants.name,
+          };
+        } catch (error) {
+          if (error instanceof Error) {
+            Alert.alert(error.message);
+            return {
+              name: "",
+            };
+          }
+        } finally {
+          setLoading(false);
+        }
+      },
     });
-  const onSubmit = handleSubmit(async (data: RestaurantInput) => {
-    // if (params.item) {
-    //   console.log("update", data);
-    // } else console.log("add", data);
+  const onSubmit = handleSubmit(async (payload: RestaurantInput) => {
+    if (restaurantId) {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("restaurants")
+          .update({ name: payload.name })
+          .eq("id", restaurantId)
+          .select();
+      } catch (error) {
+        if (error instanceof Error) {
+          Alert.alert(error.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // need to be tested
+      setLoading(true);
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("restaurants")
+          .insert([{ name: payload.name }])
+          .select();
+      } catch (error) {
+        if (error instanceof Error) {
+          Alert.alert(error.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
   });
   return (
     <ScrollView className=" bg-white px-3 py-4">
-      <ControlledInput
-        testID="title"
-        control={control}
-        name="title"
-        label="Titre *"
-        placeholder=""
-      />
-      <ControlledInput
-        testID="tables_number"
-        control={control}
-        name="tables_number"
-        label="Nombre des table *"
-        placeholder=""
-        keyboardType="numeric"
-      />
-      <TouchableOpacity onPress={pickImage} className=" my-4">
+      {loading ? (
+        <LoaderScreen />
+      ) : (
+        <>
+          <ControlledInput
+            testID="name"
+            control={control}
+            name="name"
+            label="Name *"
+            placeholder=""
+          />
+          {/* <TouchableOpacity onPress={pickImage} className=" my-4">
         <Text className=" text-success-500 font-bold">
           Choisissez une image
         </Text>
-      </TouchableOpacity>
-      {thumbnail && (
-        <View className=" w-full">
-          <Image
-            source={{ uri: thumbnail }}
-            width={240}
-            resizeMode="center"
-            height={200}
+      </TouchableOpacity> */}
+          {thumbnail && (
+            <View className=" w-full">
+              <Image
+                source={{ uri: thumbnail }}
+                width={240}
+                resizeMode="center"
+                height={200}
+              />
+            </View>
+          )}
+          <Button
+            testID="save"
+            label={restaurantId ? "Modifier le nom" : "Ajouter"}
+            onPress={handleSubmit(onSubmit)}
+            variant="primary"
+            disabled={false}
+            loading={false}
           />
-        </View>
+          {/* liste des table */}
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Places" as never)}
+            className=" rounded-lg w-full my-1 py-2 text-neutral-500 items-center border border-green-500"
+          >
+            <Text className=" text-green-500 font-bold">
+              Voir les tables
+            </Text>
+          </TouchableOpacity>
+        </>
       )}
-      <Button
-        testID="save"
-        label={"Modifier"}
-        onPress={handleSubmit(onSubmit)}
-        variant="primary"
-        disabled={false}
-        loading={false}
-      />
     </ScrollView>
   );
 };

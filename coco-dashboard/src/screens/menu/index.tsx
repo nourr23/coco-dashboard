@@ -26,7 +26,6 @@ export const Menu = () => {
       setLoading(true);
       let { data: menu, error } = await supabase.from("menu").select("*");
       setMenuList(menu);
-      console.log(menu);
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message);
@@ -90,7 +89,7 @@ export const Menu = () => {
           <>
             <View className=" ">
               {menuList &&
-                menuList.map((item) => (
+                menuList.map((item:any) => (
                   <FoodCard key={item.id} item={item}></FoodCard>
                 ))}
             </View>

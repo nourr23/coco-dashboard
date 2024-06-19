@@ -57,6 +57,10 @@ export const PlacesForm = () => {
   const [image, setImage] = useState("");
   const navigation = useNavigation();
 
+  useEffect(() => {
+    params?.item && setImage(params.item.image_url);
+  }, [params]);
+
   const { handleSubmit, control, setValue, getValues } = useForm<PlacesInput>({
     resolver: zodResolver(schema),
     defaultValues: params?.item
@@ -69,9 +73,6 @@ export const PlacesForm = () => {
         }
       : {},
   });
-  useEffect(() => {
-    console.log("image changed", image);
-  }, [image]);
 
   const onSubmit = handleSubmit(async (payload: PlacesInput) => {
     if (params?.item) {
@@ -134,12 +135,42 @@ export const PlacesForm = () => {
     }
   });
 
+  const confirmDelete = () => {
+    Alert.alert("Supprimer", "Es-tu sûr de vouloir supprimer cette table!", [
+      { text: "OK", onPress: () => deleteMenu() },
+    ]);
+  };
+  const deleteMenu = async () => {
+    try {
+      setLoading(true);
+      const { error, status } = await supabase
+        .from("tables")
+        .delete()
+        .eq("id", params.item.id);
+
+      if (error && status !== 406) {
+        throw error;
+      } else {
+        Alert.alert("Tables action", "La table a été supprimé", [
+          { text: "OK", onPress: () => navigation.goBack() },
+        ]);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+      console.log("error", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <ScrollView className=" bg-white px-3 py-4">
       {loading ? (
         <LoaderScreen />
       ) : (
-        <>
+        <View className=" pb-7">
           <ControlledInput
             testID="name"
             control={control}
@@ -181,8 +212,19 @@ export const PlacesForm = () => {
             variant="primary"
             disabled={false}
             loading={false}
+            // className=" mb-1"
           />
-        </>
+          {params.item ? (
+            <Button
+              testID="save"
+              label={"Supprimer"}
+              onPress={confirmDelete}
+              variant="danger"
+              disabled={false}
+              loading={false}
+            />
+          ) : null}
+        </View>
       )}
     </ScrollView>
   );

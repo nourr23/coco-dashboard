@@ -89,7 +89,7 @@ export const Menu = () => {
           <>
             <View className=" ">
               {menuList &&
-                menuList.map((item) => (
+                menuList.map((item:any) => (
                   <FoodCard key={item.id} item={item}></FoodCard>
                 ))}
             </View>

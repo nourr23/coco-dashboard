@@ -53,33 +53,32 @@ export const AccountInformation = () => {
 
   const { handleSubmit, control, setValue } = useForm<AccountInput>({
     resolver: zodResolver(schema),
-    defaultValues: async () => {
-      try {
-        setLoading(true);
-        const { data, error, status } = await supabase
-          .from("owners")
-          .select(`id, first_name, last_name,phone`)
-          .single();
-        if (error && status !== 406) {
-          throw error;
-        }
-        setOwner(data?.id);
-        return {
-          first_name: data?.first_name,
-          last_name: data?.last_name,
-          phone: data?.phone,
-        };
-      } catch (error) {
-        return {
-          first_name: "",
-          last_name: "",
-          phone: "",
-        };
-      } finally {
-        setLoading(false);
-      }
-    },
+    // defaultValues: async () => {
+
+    // },
   });
+  useEffect(() => {
+    getAccountInformation();
+  }, []);
+  const getAccountInformation = async () => {
+    try {
+      setLoading(true);
+      const { data, error, status } = await supabase
+        .from("owners")
+        .select(`id, first_name, last_name,phone`)
+        .single();
+      if (error && status !== 406) {
+        throw error;
+      }
+      setOwner(data?.id);
+      setValue("first_name", data?.first_name);
+      setValue("last_name", data?.last_name);
+      setValue("phone", data?.phone);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
   const onSubmit = handleSubmit(async (data: AccountInput) => {
     try {
       setLoading(true);

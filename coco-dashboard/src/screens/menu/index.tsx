@@ -79,9 +79,9 @@ export const Menu = () => {
   return (
     <View className=" flex-1 relative bg-white px-3 py-2">
       <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={onRefresh} />
-        }
+      // refreshControl={
+      //   <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+      // }
       >
         {loading ? (
           <LoaderScreen />
@@ -89,7 +89,7 @@ export const Menu = () => {
           <>
             <View className=" ">
               {menuList &&
-                menuList.map((item:any) => (
+                menuList.map((item: any) => (
                   <FoodCard key={item.id} item={item}></FoodCard>
                 ))}
             </View>

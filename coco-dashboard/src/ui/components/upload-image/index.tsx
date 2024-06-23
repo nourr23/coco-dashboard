@@ -51,6 +51,7 @@ export const UploadImage = ({ folder_name, image, onSetImage }: any) => {
         if (error) {
           console.log("if error", error);
         } else {
+          console.log("else", image);
           onSetImage(data?.publicUrl);
           setLoadingImgae(false);
         }

@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { Alert, Image } from "react-native";
 import { supabase } from "../../../lib/supabase";
 import { LoaderScreen } from "react-native-ui-lib";
+import { RestoImages } from "./resto-images";
 
 const schema = z.object({
   name: z
@@ -38,55 +39,35 @@ export const RestaurantInformation = () => {
 
   const navigation = useNavigation();
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setThumbnail(result.assets[0].uri);
-    }
-  };
-
   const { handleSubmit, control, setValue, getValues } =
     useForm<RestaurantInput>({
       resolver: zodResolver(schema),
-      defaultValues: async () => {
-        try {
-          setLoading(true);
-          const { data: restaurants, error } = await supabase
-            .from("restaurants")
-            .select("id,name")
-            .single();
-
-          if (error) {
-            return {
-              name: "",
-            };
-            throw error;
-          } else {
-            setRestaurantId(restaurants && restaurants.id);
-            console.log(restaurants);
-          }
-          return {
-            name: restaurants.name,
-          };
-        } catch (error) {
-          if (error instanceof Error) {
-            Alert.alert(error.message);
-            return {
-              name: "",
-            };
-          }
-        } finally {
-          setLoading(false);
-        }
-      },
     });
+  useEffect(() => {
+    getRestaurant();
+  }, []);
+  const getRestaurant = async () => {
+    try {
+      setLoading(true);
+      const { data: restaurants, error } = await supabase
+        .from("restaurants")
+        .select("id,name")
+        .single();
+
+      if (error) {
+        throw error;
+      } else {
+        setRestaurantId(restaurants && restaurants.id);
+        setValue("name", restaurants.name);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   const onSubmit = handleSubmit(async (payload: RestaurantInput) => {
     if (restaurantId) {
       try {
@@ -158,14 +139,7 @@ export const RestaurantInformation = () => {
             loading={false}
           />
           {/* liste des table */}
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Places" as never)}
-            className=" rounded-lg w-full my-1 py-2 text-neutral-500 items-center border border-green-500"
-          >
-            <Text className=" text-green-500 font-bold">
-              Voir les tables
-            </Text>
-          </TouchableOpacity>
+          <RestoImages />
         </>
       )}
     </ScrollView>

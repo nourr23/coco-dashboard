@@ -140,6 +140,10 @@ export const RestoImages = () => {
                             text: "Oui",
                             onPress: () => deleteRestImage(item.id),
                           },
+                          {
+                            text: "Cancel",
+                            // onPress: () => deleteRestImage(item.id),
+                          },
                         ]
                       )
                     }
